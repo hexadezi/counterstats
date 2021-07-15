@@ -1,0 +1,168 @@
+﻿<Window
+	x:Class="counterstats.MainWindow"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:designTime="clr-namespace:counterstats.ViewModel"
+	xmlns:local="clr-namespace:counterstats"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	Title="counterstats"
+	Width="290"
+	Height="401"
+	MinWidth="295"
+	MinHeight="401"
+	d:DataContext="{d:DesignInstance Type=designTime:DesignTimeViewModel,
+	                                 IsDesignTimeCreatable=True}"
+	Topmost="True"
+	mc:Ignorable="d">
+	<Window.Resources>
+
+		<BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+		<Style x:Key="tblBase" TargetType="TextBlock">
+			<Setter Property="Padding" Value="2,0,2,0" />
+		</Style>
+
+		<Style
+			x:Key="tblCollapseOnNull"
+			BasedOn="{StaticResource tblBase}"
+			TargetType="TextBlock">
+			<Style.Triggers>
+				<Trigger Property="Text" Value="">
+					<Setter Property="Visibility" Value="Collapsed" />
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+
+		<!--  Virtualised ItemsControl  -->
+		<Style x:Key="ItemsControlVirtualizedStyle" TargetType="ItemsControl">
+			<Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="False" />
+			<Setter Property="ScrollViewer.CanContentScroll" Value="True" />
+			<Setter Property="ItemsPanel">
+				<Setter.Value>
+					<ItemsPanelTemplate>
+						<VirtualizingStackPanel />
+					</ItemsPanelTemplate>
+				</Setter.Value>
+			</Setter>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="ItemsControl">
+						<Border
+							Padding="{TemplateBinding Control.Padding}"
+							Background="{TemplateBinding Panel.Background}"
+							BorderBrush="{TemplateBinding Border.BorderBrush}"
+							BorderThickness="{TemplateBinding Border.BorderThickness}"
+							SnapsToDevicePixels="True">
+							<ScrollViewer Padding="{TemplateBinding Control.Padding}" Focusable="False">
+								<ItemsPresenter SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+							</ScrollViewer>
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+	</Window.Resources>
+	<Grid>
+		<ItemsControl
+			Margin="1"
+			ItemsSource="{Binding Players}"
+			Style="{StaticResource ItemsControlVirtualizedStyle}">
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<DockPanel Margin="1">
+						<Border BorderBrush="Black" BorderThickness="1">
+							<Image
+								Width="32"
+								Height="32"
+								Source="{Binding Avatar}"
+								ToolTipService.InitialShowDelay="200">
+								<Image.ToolTip>
+									<ToolTip>
+										<ToolTip.Template>
+											<ControlTemplate>
+												<Image
+													Width="184"
+													Height="184"
+													Source="{Binding AvatarFull}" />
+											</ControlTemplate>
+										</ToolTip.Template>
+									</ToolTip>
+								</Image.ToolTip>
+							</Image>
+						</Border>
+						<StackPanel>
+							<WrapPanel>
+								<TextBlock
+									FontWeight="SemiBold"
+									Style="{StaticResource tblBase}"
+									Text="{Binding Name}" />
+								<TextBlock
+									VerticalAlignment="Center"
+									FontSize="10"
+									Style="{StaticResource tblCollapseOnNull}"
+									Text="{Binding TimeCreated}" />
+								<TextBlock
+									VerticalAlignment="Center"
+									FontSize="10"
+									Foreground="Red"
+									Style="{StaticResource tblCollapseOnNull}"
+									Text="{Binding VACBanned}" />
+								<TextBlock
+									VerticalAlignment="Center"
+									FontSize="10"
+									Foreground="Red"
+									Style="{StaticResource tblCollapseOnNull}"
+									Text="{Binding CommunityBanned}" />
+								<TextBlock
+									VerticalAlignment="Center"
+									FontSize="10"
+									Foreground="Red"
+									Style="{StaticResource tblCollapseOnNull}"
+									Text="{Binding EconomyBan}" />
+							</WrapPanel>
+							<WrapPanel>
+								<TextBlock FontSize="11" Style="{StaticResource tblBase}">
+									<Hyperlink NavigateUri="{Binding SteamProfile}" RequestNavigate="Hyperlink_RequestNavigate">
+										steam
+									</Hyperlink>
+								</TextBlock>
+								<TextBlock FontSize="11" Style="{StaticResource tblBase}">
+
+									<Hyperlink NavigateUri="{Binding Inventory}" RequestNavigate="Hyperlink_RequestNavigate">
+										inventory
+									</Hyperlink>
+								</TextBlock>
+								<TextBlock
+									FontSize="11"
+									FontWeight="Normal"
+									Style="{StaticResource tblBase}">
+									<Hyperlink NavigateUri="{Binding Friends}" RequestNavigate="Hyperlink_RequestNavigate">
+										friends
+									</Hyperlink>
+								</TextBlock>
+								<TextBlock
+									FontSize="11"
+									FontWeight="Normal"
+									Style="{StaticResource tblBase}">
+									<Hyperlink NavigateUri="{Binding CsgoStats}" RequestNavigate="Hyperlink_RequestNavigate">
+										csgostats
+									</Hyperlink>
+								</TextBlock>
+								<TextBlock
+									FontSize="11"
+									FontWeight="Normal"
+									Style="{StaticResource tblBase}">
+									<Hyperlink NavigateUri="{Binding Steamrep}" RequestNavigate="Hyperlink_RequestNavigate">
+										steamrep
+									</Hyperlink>
+								</TextBlock>
+							</WrapPanel>
+						</StackPanel>
+					</DockPanel>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+	</Grid>
+</Window>
