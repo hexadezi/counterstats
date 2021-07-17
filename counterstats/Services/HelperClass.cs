@@ -9,13 +9,11 @@ namespace counterstats.Services
 	{
 		public static string DownloadText(string url)
 		{
-			var request = (HttpWebRequest)WebRequest.Create(url);
-			var response = (HttpWebResponse)request.GetResponse();
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
-			using (var reader = new StreamReader(response.GetResponseStream()))
-			{
-				return reader.ReadToEnd();
-			}
+			using StreamReader reader = new(response.GetResponseStream());
+			return reader.ReadToEnd();
 		}
 		public static string GetXmlpage(string address)
 		{
@@ -39,14 +37,14 @@ namespace counterstats.Services
 		public static XmlDocument GetXmlPlayerBans(string id32)
 		{
 			string id64 = ConvertToID64(id32);
-			XmlDocument xmlPlayerBans = new XmlDocument();
+			XmlDocument xmlPlayerBans = new();
 			xmlPlayerBans.LoadXml(GetXmlpage(@"http://api.steampowered.com/ISteamUser/GetPlayerBans/v0001/?key=" + SettingsProvider.Settings.ApiKey + "&format=xml&steamids=" + id64));
 			return xmlPlayerBans;
 		}
 		public static XmlDocument GetXmlPlayerSummaries(string id32)
 		{
 			string id64 = ConvertToID64(id32);
-			XmlDocument xmlPlayerSummaries = new XmlDocument();
+			XmlDocument xmlPlayerSummaries = new();
 			xmlPlayerSummaries.LoadXml(GetXmlpage(@"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + SettingsProvider.Settings.ApiKey + "&format=xml&steamids=" + id64));
 			return xmlPlayerSummaries;
 		}

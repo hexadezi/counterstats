@@ -32,11 +32,12 @@ namespace counterstats.ViewModel
 		public string CsgoStats { get; set; } = @"https://csgostats.gg/player/76561198987564063";
 		public string Csgorunner { get; set; }
 		public string Avatar { get; set; } = @"https://cdn.akamai.steamstatic.com/steamcommunity/public/images/avatars/fe/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg";
-		public string TimeCreated { get; set; } = DateTime.Now.ToString("(dd.MM.yy)");
+		public string TimeCreated { get; set; } = DateTime.Now.ToString("[dd.MM.yy]");
 		public string Inventory { get; set; } = @"https://steamcommunity.com/profiles/76561198987564063/inventory";
-		public string CommunityBanned { get; set; }
+		public string CommunityBanned { get; set; } = "COM";
 		public string VACBanned { get; set; } = "VAC";
-		public string EconomyBan { get; set; } = "Trade banned";
+		public string EconomyBan { get; set; } = "ECO";
+		public string DaysSinceLastBan { get; set; } = "[57]";
 
 		public Playerr(string s)
 		{

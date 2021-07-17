@@ -1,5 +1,9 @@
 ﻿using counterstats.Services;
 using System;
+using System.IO;
+using System.Net;
+using System.Text.RegularExpressions;
+using System.Windows.Media.Imaging;
 using System.Xml;
 
 namespace counterstats.Model
@@ -12,6 +16,7 @@ namespace counterstats.Model
 		public string Steamrep => @"https://steamrep.com/profiles/" + SteamID64;
 		public string Friends => @"https://steamcommunity.com/profiles/" + SteamID64 + "/friends";
 		public string Inventory => @"https://steamcommunity.com/profiles/" + SteamID64 + "/inventory";
+		public string FaceIt => @"https://www.faceit.com/de/search/player/" + SteamID64;
 		public string Name { get; set; }
 		public string Avatar { get; set; }
 		public string TimeCreated { get; set; }
@@ -19,6 +24,7 @@ namespace counterstats.Model
 		public string EconomyBan { get; set; }
 		public string CommunityBanned { get; set; }
 		public string VACBanned { get; set; }
+		public string DaysSinceLastBan { get; set; }
 		public string AvatarFull { get; set; }
 		public XmlDocument XmlPlayerSummaries { get; set; }
 		public XmlDocument XmlPlayerBans { get; set; }
@@ -40,13 +46,13 @@ namespace counterstats.Model
 					Int32.Parse(
 						XmlPlayerSummaries.DocumentElement.SelectSingleNode(
 							"/response/players/player/timecreated").InnerText))
-					.DateTime.ToString("(dd.MM.yy)");
+					.DateTime.ToString("[dd.MM.yy]");
 			}
 
 
 			if (XmlPlayerBans.DocumentElement.SelectSingleNode("/response/players/player/CommunityBanned").InnerText == "true")
 			{
-				CommunityBanned = "Community Ban";
+				CommunityBanned = "COM";
 			}
 
 			if (XmlPlayerBans.DocumentElement.SelectSingleNode("/response/players/player/VACBanned").InnerText == "true")
@@ -56,8 +62,12 @@ namespace counterstats.Model
 
 			if (XmlPlayerBans.DocumentElement.SelectSingleNode("/response/players/player/EconomyBan").InnerText != "none")
 			{
-				EconomyBan = XmlPlayerBans.DocumentElement.SelectSingleNode("/response/players/player/EconomyBan").InnerText;
-				EconomyBan = "Trade " + EconomyBan;
+				EconomyBan = "ECO";
+			}
+
+			if (XmlPlayerBans.DocumentElement.SelectSingleNode("/response/players/player/DaysSinceLastBan").InnerText != "0")
+			{
+				DaysSinceLastBan = "[" + XmlPlayerBans.DocumentElement.SelectSingleNode("/response/players/player/DaysSinceLastBan").InnerText  + "]";
 			}
 		}
 	}

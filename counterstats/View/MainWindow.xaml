@@ -7,22 +7,48 @@
 	xmlns:local="clr-namespace:counterstats"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	Title="counterstats"
-	Width="290"
-	Height="401"
-	MinWidth="295"
-	MinHeight="401"
+	Width="275"
+	Height="399"
+	MinWidth="275"
+	MinHeight="399"
 	d:DataContext="{d:DesignInstance Type=designTime:DesignTimeViewModel,
 	                                 IsDesignTimeCreatable=True}"
+	d:Height="399"
+	d:Width="275"
 	Topmost="True"
 	mc:Ignorable="d">
+
 	<Window.Resources>
 
 		<BooleanToVisibilityConverter x:Key="BoolToVis" />
-		<Style x:Key="hlkBase" TargetType="Hyperlink">
+
+		<Style
+			x:Key="tooltipBase"
+			BasedOn="{StaticResource {x:Type ToolTip}}"
+			TargetType="ToolTip">
+			<Setter Property="Background" Value="White" />
+			<Setter Property="BorderBrush" Value="Black" />
+		</Style>
+		<Style
+			x:Key="hlkBase"
+			BasedOn="{StaticResource {x:Type Hyperlink}}"
+			TargetType="Hyperlink">
 			<Setter Property="TextDecorations" Value="None" />
 		</Style>
+
+		<Style
+			x:Key="hlkName"
+			BasedOn="{StaticResource {x:Type Hyperlink}}"
+			TargetType="Hyperlink">
+			<Setter Property="TextDecorations" Value="None" />
+			<Setter Property="Foreground" Value="Black" />
+		</Style>
+
 		<Style x:Key="tblBase" TargetType="TextBlock">
 			<Setter Property="Padding" Value="2,0,2,0" />
+			<Setter Property="FontSize" Value="13" />
+			<Setter Property="FontFamily" Value="Bahnschrift Condensed" />
+
 		</Style>
 
 		<Style
@@ -56,7 +82,10 @@
 							BorderBrush="{TemplateBinding Border.BorderBrush}"
 							BorderThickness="{TemplateBinding Border.BorderThickness}"
 							SnapsToDevicePixels="True">
-							<ScrollViewer Padding="{TemplateBinding Control.Padding}" Focusable="False">
+							<ScrollViewer
+								Padding="{TemplateBinding Control.Padding}"
+								Focusable="False"
+								VerticalScrollBarVisibility="Visible">
 								<ItemsPresenter SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
 							</ScrollViewer>
 						</Border>
@@ -66,106 +95,126 @@
 		</Style>
 
 	</Window.Resources>
+
 	<Grid>
 		<ItemsControl
-			Margin="1"
+			Margin="0"
 			ItemsSource="{Binding Players}"
+			MouseDown="ItemsControl_MouseDown"
 			Style="{StaticResource ItemsControlVirtualizedStyle}">
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
-					<DockPanel Margin="1">
+					<StackPanel Margin="1" Orientation="Horizontal">
 						<Border BorderBrush="Black" BorderThickness="1">
 							<Image
 								Width="32"
 								Height="32"
-								Source="{Binding Avatar}"
-								ToolTipService.InitialShowDelay="200">
+								MouseDown="Image_MouseDown"
+								RenderOptions.BitmapScalingMode="HighQuality"
+								Source="{Binding Avatar, IsAsync=True}">
 								<Image.ToolTip>
-									<ToolTip>
-										<ToolTip.Template>
-											<ControlTemplate>
-												<Image
-													Width="184"
-													Height="184"
-													Source="{Binding AvatarFull}" />
-											</ControlTemplate>
-										</ToolTip.Template>
+									<ToolTip
+										Padding="0"
+										HorizontalAlignment="Stretch"
+										VerticalAlignment="Stretch"
+										Style="{StaticResource tooltipBase}">
+										<Image
+											Width="184"
+											Height="184"
+											Source="{Binding AvatarFull, IsAsync=True}" />
+
 									</ToolTip>
 								</Image.ToolTip>
 							</Image>
 						</Border>
-						<StackPanel>
-							<WrapPanel>
+						<StackPanel VerticalAlignment="Center">
+							<StackPanel Orientation="Horizontal">
+								<TextBlock>
+									<Hyperlink
+										NavigateUri="{Binding SteamProfile}"
+										RequestNavigate="Hyperlink_RequestNavigate"
+										Style="{StaticResource hlkName}">
+										<TextBlock
+											FontFamily="Bahnschrift"
+											FontWeight="Bold"
+											Style="{StaticResource tblCollapseOnNull}"
+											Text="{Binding Name}" />
+									</Hyperlink>
+								</TextBlock>
+								<TextBlock Style="{StaticResource tblCollapseOnNull}" Text="{Binding TimeCreated}">
+									<TextBlock.ToolTip>
+										<ToolTip Style="{StaticResource tooltipBase}">
+											Date the account was created
+										</ToolTip>
+									</TextBlock.ToolTip>
+								</TextBlock>
 								<TextBlock
-									FontWeight="SemiBold"
-									Style="{StaticResource tblBase}"
-									Text="{Binding Name}" />
-								<TextBlock
-									VerticalAlignment="Center"
-									FontSize="10"
-									Style="{StaticResource tblCollapseOnNull}"
-									Text="{Binding TimeCreated}" />
-								<TextBlock
-									VerticalAlignment="Center"
-									FontSize="10"
 									Foreground="Red"
 									Style="{StaticResource tblCollapseOnNull}"
 									Text="{Binding VACBanned}" />
 								<TextBlock
-									VerticalAlignment="Center"
-									FontSize="10"
 									Foreground="Red"
 									Style="{StaticResource tblCollapseOnNull}"
 									Text="{Binding CommunityBanned}" />
 								<TextBlock
-									VerticalAlignment="Center"
-									FontSize="10"
 									Foreground="Red"
 									Style="{StaticResource tblCollapseOnNull}"
 									Text="{Binding EconomyBan}" />
-							</WrapPanel>
-							<WrapPanel>
-								<TextBlock FontSize="11" Style="{StaticResource tblBase}">
+								<TextBlock
+									Foreground="Red"
+									Style="{StaticResource tblCollapseOnNull}"
+									Text="{Binding DaysSinceLastBan}">
+									<TextBlock.ToolTip>
+										<ToolTip Style="{StaticResource tooltipBase}">
+											Days since last ban
+										</ToolTip>
+									</TextBlock.ToolTip>
+								</TextBlock>
+							</StackPanel>
+							<StackPanel Orientation="Horizontal">
+								<TextBlock Style="{StaticResource tblBase}">
 									<Hyperlink
-										NavigateUri="{Binding SteamProfile}"
+										NavigateUri="{Binding Inventory}"
 										RequestNavigate="Hyperlink_RequestNavigate"
 										Style="{StaticResource hlkBase}">
-										steam
-									</Hyperlink>
-								</TextBlock>
-								<TextBlock FontSize="11" Style="{StaticResource tblBase}">
-
-									<Hyperlink Style="{StaticResource hlkBase}" NavigateUri="{Binding Inventory}" RequestNavigate="Hyperlink_RequestNavigate">
 										inventory
 									</Hyperlink>
 								</TextBlock>
-								<TextBlock
-									FontSize="11"
-									FontWeight="Normal"
-									Style="{StaticResource tblBase}">
-									<Hyperlink Style="{StaticResource hlkBase}" NavigateUri="{Binding Friends}" RequestNavigate="Hyperlink_RequestNavigate">
+								<TextBlock Style="{StaticResource tblBase}">
+									<Hyperlink
+										NavigateUri="{Binding Friends}"
+										RequestNavigate="Hyperlink_RequestNavigate"
+										Style="{StaticResource hlkBase}">
 										friends
 									</Hyperlink>
 								</TextBlock>
-								<TextBlock
-									FontSize="11"
-									FontWeight="Normal"
-									Style="{StaticResource tblBase}">
-									<Hyperlink Style="{StaticResource hlkBase}" NavigateUri="{Binding CsgoStats}" RequestNavigate="Hyperlink_RequestNavigate">
+								<TextBlock Style="{StaticResource tblBase}">
+									<Hyperlink
+										NavigateUri="{Binding FaceIt}"
+										RequestNavigate="Hyperlink_RequestNavigate"
+										Style="{StaticResource hlkBase}">
+										faceit
+									</Hyperlink>
+								</TextBlock>
+								<TextBlock Style="{StaticResource tblBase}">
+									<Hyperlink
+										NavigateUri="{Binding CsgoStats}"
+										RequestNavigate="Hyperlink_RequestNavigate"
+										Style="{StaticResource hlkBase}">
 										csgostats
 									</Hyperlink>
 								</TextBlock>
-								<TextBlock
-									FontSize="11"
-									FontWeight="Normal"
-									Style="{StaticResource tblBase}">
-									<Hyperlink Style="{StaticResource hlkBase}" NavigateUri="{Binding Steamrep}" RequestNavigate="Hyperlink_RequestNavigate">
+								<TextBlock Style="{StaticResource tblBase}">
+									<Hyperlink
+										NavigateUri="{Binding Steamrep}"
+										RequestNavigate="Hyperlink_RequestNavigate"
+										Style="{StaticResource hlkBase}">
 										steamrep
 									</Hyperlink>
 								</TextBlock>
-							</WrapPanel>
+							</StackPanel>
 						</StackPanel>
-					</DockPanel>
+					</StackPanel>
 				</DataTemplate>
 			</ItemsControl.ItemTemplate>
 		</ItemsControl>

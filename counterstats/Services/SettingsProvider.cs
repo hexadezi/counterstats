@@ -31,7 +31,7 @@ namespace counterstats
 
 		public static void Save()
 		{
-			JsonSerializerOptions options = new JsonSerializerOptions
+			JsonSerializerOptions options = new()
 			{
 				WriteIndented = true
 			};

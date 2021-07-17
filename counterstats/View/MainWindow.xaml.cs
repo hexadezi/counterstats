@@ -14,8 +14,8 @@ namespace counterstats
 
 		public MainWindow()
 		{
-			InitializeComponent();
 			DataContext = mainWindowViewModel;
+			InitializeComponent();
 		}
 
 		private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
@@ -25,6 +25,23 @@ namespace counterstats
 				FileName = e.Uri.AbsoluteUri,
 				UseShellExecute = true
 			});
+		}
+
+		private void ItemsControl_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			if (e.ChangedButton == System.Windows.Input.MouseButton.Left)
+			{
+				DragMove();
+				e.Handled = true;
+			}
+		}
+
+		private void Image_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			if (e.ChangedButton == System.Windows.Input.MouseButton.Left)
+			{
+				e.Handled = true;
+			}
 		}
 	}
 }
