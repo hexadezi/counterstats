@@ -8,7 +8,8 @@
 - Variable in CS:GO must be set. Add it to autoexec file: con_logfile console.log
 
 ## Usage
-Download and open the file. A config file will be created. Complete the missing entries.
+Download and open the file. A config file will be created. Complete the missing entries and restart the app.
+If you enter status into the console, it will be read by the application and information about the players will be displayed.
 
 ## Settings
 Setting | Explanation
