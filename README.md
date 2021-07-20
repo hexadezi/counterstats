@@ -1,7 +1,7 @@
 # counterstats
 
 ## Screenshot
-![](https://github.com/labo89/counterstats/blob/master/screenshots/screen_01.png)
+![](/screenshots/screen_01.png)
 
 ## Prerequisites
 - .NET 5.0 Runtime: https://dotnet.microsoft.com/download/dotnet/5.0
@@ -29,7 +29,7 @@ Setting | Explanation
 
 
 ## Download
-Download here: https://github.com/labo89/counterstats/releases
+Download here: https://github.com/labo89/counterstats/releases/latest
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details
