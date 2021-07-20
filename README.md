@@ -5,17 +5,20 @@
 ## Prerequisites
 - .NET 5.0 Runtime: https://dotnet.microsoft.com/download/dotnet/5.0
 - Steam API Key: https://steamcommunity.com/dev/apikey
-- Variable in CS:GO must be set. Add it to autoexec file: con_logfile console.log
+- Variable con_logfile must be set in cs. Add it to autoexec file: con_logfile console.log
 
 ## Usage
 Download and open the file. A config file will be created. Complete the missing entries and restart the app.
-If you enter status into the console, it will be read by the application and information about the players will be displayed.
+If you enter status into the cs console, it will be read by the application and information about the players will be displayed.
 
 ## Settings
 Setting | Explanation
 ------------ | -------------
-CsgoPath | Path to the console output file with escaping character
-ApiKey | Steam API Key
+"CsgoPath" | Path to the console output file with escaping character.
+"ApiKey | Your Steam API Key.
+"MySteamID" | Your Steam ID. Example: 76561197960287930
+"IgnoreFriends" | Ignore own friends. Friends must be public and MySteamID must be set. True or false.
+"IgnoreOwnId" | Ignore own id. MySteamID must be set. True or false.
 
 ## Download
 Download here: https://github.com/labo89/counterstats/releases
