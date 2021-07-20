@@ -16,7 +16,7 @@
 	                                 IsDesignTimeCreatable=True}"
 	MouseDown="Window_MouseDown"
 	SnapsToDevicePixels="True"
-	Topmost="True"
+	Topmost="{Binding OnTop}"
 	mc:Ignorable="d">
 	<Window.DataContext>
 		<vm:MainWindowViewModel />

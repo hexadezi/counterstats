@@ -22,7 +22,7 @@ namespace counterstats.ViewModel
 		public List<string> IDsToIgnore { get; set; } = new();
 		public RelayCommand OpenAll { get; set; }
 		public RelayCommand Open { get; set; }
-
+		public bool OnTop => SettingsProvider.Settings.OnTop;
 		public MainWindowViewModel()
 		{
 			Initialize();

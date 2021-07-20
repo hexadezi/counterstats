@@ -10,6 +10,7 @@ namespace counterstats
 		public string MySteamID { get; set; } = "";
 		public bool IgnoreFriends { get; set; }
 		public bool IgnoreOwnId { get; set; }
+		public bool OnTop { get; set; }
 	}
 
 
