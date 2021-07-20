@@ -29,7 +29,7 @@ Setting | Explanation
 
 
 ## Download
-Download here: https://github.com/labo89/counterstats/releases/latest
+Download here: https://github.com/hexadezi/counterstats/releases/latest
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details
