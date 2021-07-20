@@ -5,18 +5,29 @@ namespace counterstats.ViewModel.Base
 {
 	public class RelayCommand : ICommand
 	{
-		private readonly Func<bool> canExecuteEvaluator;
+		#region Fields
+		readonly Action<object> _execute;
+		readonly Predicate<object> _canExecute;
 
-		private readonly Action methodToExecute;
+		#endregion
 
-		public RelayCommand(Action methodToExecute, Func<bool> canExecuteEvaluator)
+		#region Constructors
+		public RelayCommand(Action<object> execute) : this(execute, null) { }
+
+		public RelayCommand(Action<object> execute, Predicate<object> canExecute)
 		{
-			this.methodToExecute = methodToExecute;
-			this.canExecuteEvaluator = canExecuteEvaluator;
+			if (execute == null)
+				throw new ArgumentNullException("execute");
+
+			_execute = execute;
+			_canExecute = canExecute;
 		}
+		#endregion
 
-		public RelayCommand(Action methodToExecute) : this(methodToExecute, null)
+		#region ICommand Members
+		public bool CanExecute(object parameter)
 		{
+			return _canExecute == null ? true : _canExecute(parameter);
 		}
 
 		public event EventHandler CanExecuteChanged
@@ -25,22 +36,10 @@ namespace counterstats.ViewModel.Base
 			remove { CommandManager.RequerySuggested -= value; }
 		}
 
-		public bool CanExecute(object parameter)
-		{
-			if (this.canExecuteEvaluator == null)
-			{
-				return true;
-			}
-			else
-			{
-				bool result = this.canExecuteEvaluator.Invoke();
-				return result;
-			}
-		}
-
 		public void Execute(object parameter)
 		{
-			this.methodToExecute.Invoke();
+			_execute(parameter);
 		}
+		#endregion
 	}
 }

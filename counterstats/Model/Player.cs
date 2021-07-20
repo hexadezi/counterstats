@@ -1,5 +1,7 @@
 ﻿using counterstats.Services;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -28,6 +30,10 @@ namespace counterstats.Model
 		public string AvatarFull { get; set; }
 		public XmlDocument XmlPlayerSummaries { get; set; }
 		public XmlDocument XmlPlayerBans { get; set; }
+		public XmlDocument XmlFriends { get; set; }
+		public dynamic this[string property] => GetType().GetProperty(property).GetValue(this, null);
+
+		//public List<string> FriendList { get; set; } = new();
 
 		public Player(string id32)
 		{
@@ -39,6 +45,9 @@ namespace counterstats.Model
 			Avatar = XmlPlayerSummaries.DocumentElement.SelectSingleNode("/response/players/player/avatar").InnerText;
 			AvatarFull = XmlPlayerSummaries.DocumentElement.SelectSingleNode("/response/players/player/avatarfull").InnerText;
 			CommunityVisibilityState = XmlPlayerSummaries.DocumentElement.SelectSingleNode("/response/players/player/communityvisibilitystate").InnerText;
+
+
+
 
 			if (CommunityVisibilityState == "3")
 			{
@@ -67,7 +76,7 @@ namespace counterstats.Model
 
 			if (XmlPlayerBans.DocumentElement.SelectSingleNode("/response/players/player/DaysSinceLastBan").InnerText != "0")
 			{
-				DaysSinceLastBan = "[" + XmlPlayerBans.DocumentElement.SelectSingleNode("/response/players/player/DaysSinceLastBan").InnerText  + "]";
+				DaysSinceLastBan = "[" + XmlPlayerBans.DocumentElement.SelectSingleNode("/response/players/player/DaysSinceLastBan").InnerText + "]";
 			}
 		}
 	}

@@ -6,18 +6,21 @@
 	xmlns:designTime="clr-namespace:counterstats.ViewModel"
 	xmlns:local="clr-namespace:counterstats"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:vm="clr-namespace:counterstats.ViewModel"
 	Title="counterstats"
-	Width="275"
-	Height="399"
-	MinWidth="275"
-	MinHeight="399"
+	Width="286"
+	Height="425"
+	MinWidth="286"
+	MinHeight="425"
 	d:DataContext="{d:DesignInstance Type=designTime:DesignTimeViewModel,
 	                                 IsDesignTimeCreatable=True}"
-	d:Height="399"
-	d:Width="275"
+	MouseDown="Window_MouseDown"
+	SnapsToDevicePixels="True"
 	Topmost="True"
 	mc:Ignorable="d">
-
+	<Window.DataContext>
+		<vm:MainWindowViewModel />
+	</Window.DataContext>
 	<Window.Resources>
 
 		<BooleanToVisibilityConverter x:Key="BoolToVis" />
@@ -29,11 +32,32 @@
 			<Setter Property="Background" Value="White" />
 			<Setter Property="BorderBrush" Value="Black" />
 		</Style>
+
 		<Style
-			x:Key="hlkBase"
+			x:Key="hotlinkName"
 			BasedOn="{StaticResource {x:Type Hyperlink}}"
 			TargetType="Hyperlink">
 			<Setter Property="TextDecorations" Value="None" />
+			<Setter Property="Foreground" Value="Black" />
+			<Setter Property="Command" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.Open}" />
+			<Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Self}}" />
+		</Style>
+
+		<Style
+			x:Key="hotlinkSinglePlayer"
+			BasedOn="{StaticResource {x:Type Hyperlink}}"
+			TargetType="Hyperlink">
+			<Setter Property="TextDecorations" Value="None" />
+			<Setter Property="Command" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.Open}" />
+			<Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Self}}" />
+		</Style>
+
+		<Style
+			x:Key="hotlinkMultiplePlayer"
+			BasedOn="{StaticResource {x:Type Hyperlink}}"
+			TargetType="Hyperlink">
+			<Setter Property="TextDecorations" Value="None" />
+			<Setter Property="Command" Value="{Binding OpenAll}" />
 		</Style>
 
 		<Style
@@ -41,12 +65,17 @@
 			BasedOn="{StaticResource {x:Type Hyperlink}}"
 			TargetType="Hyperlink">
 			<Setter Property="TextDecorations" Value="None" />
+			<Setter Property="TextDecorations" Value="None" />
 			<Setter Property="Foreground" Value="Black" />
 		</Style>
 
+
+
+
+
 		<Style x:Key="tblBase" TargetType="TextBlock">
 			<Setter Property="Padding" Value="2,0,2,0" />
-			<Setter Property="FontSize" Value="13" />
+			<Setter Property="FontSize" Value="14" />
 			<Setter Property="FontFamily" Value="Bahnschrift Condensed" />
 
 		</Style>
@@ -96,11 +125,36 @@
 
 	</Window.Resources>
 
-	<Grid>
+	<DockPanel>
+		<Border
+			Padding="4"
+			BorderBrush="Black"
+			BorderThickness="0,1,0,0"
+			DockPanel.Dock="Bottom">
+			<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+				<TextBlock Style="{StaticResource tblBase}"><Hyperlink CommandParameter="SteamProfile" Style="{StaticResource hotlinkMultiplePlayer}">
+						steam
+					</Hyperlink></TextBlock>
+				<TextBlock Style="{StaticResource tblBase}"><Hyperlink CommandParameter="Inventory" Style="{StaticResource hotlinkMultiplePlayer}">
+						inventory
+					</Hyperlink></TextBlock>
+				<TextBlock Style="{StaticResource tblBase}"><Hyperlink CommandParameter="Friends" Style="{StaticResource hotlinkMultiplePlayer}">
+						friends
+					</Hyperlink></TextBlock>
+				<TextBlock Style="{StaticResource tblBase}"><Hyperlink CommandParameter="FaceIt" Style="{StaticResource hotlinkMultiplePlayer}">
+						faceit
+					</Hyperlink></TextBlock>
+				<TextBlock Style="{StaticResource tblBase}"><Hyperlink CommandParameter="CsgoStats" Style="{StaticResource hotlinkMultiplePlayer}">
+						csgostats
+					</Hyperlink></TextBlock>
+				<TextBlock Style="{StaticResource tblBase}"><Hyperlink CommandParameter="Steamrep" Style="{StaticResource hotlinkMultiplePlayer}">
+						steamrep
+					</Hyperlink></TextBlock>
+			</StackPanel>
+		</Border>
 		<ItemsControl
 			Margin="0"
 			ItemsSource="{Binding Players}"
-			MouseDown="ItemsControl_MouseDown"
 			Style="{StaticResource ItemsControlVirtualizedStyle}">
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
@@ -130,10 +184,7 @@
 						<StackPanel VerticalAlignment="Center">
 							<StackPanel Orientation="Horizontal">
 								<TextBlock>
-									<Hyperlink
-										NavigateUri="{Binding SteamProfile}"
-										RequestNavigate="Hyperlink_RequestNavigate"
-										Style="{StaticResource hlkName}">
+									<Hyperlink NavigateUri="{Binding SteamProfile}" Style="{StaticResource hotlinkName}">
 										<TextBlock
 											FontFamily="Bahnschrift"
 											FontWeight="Bold"
@@ -173,42 +224,27 @@
 							</StackPanel>
 							<StackPanel Orientation="Horizontal">
 								<TextBlock Style="{StaticResource tblBase}">
-									<Hyperlink
-										NavigateUri="{Binding Inventory}"
-										RequestNavigate="Hyperlink_RequestNavigate"
-										Style="{StaticResource hlkBase}">
+									<Hyperlink NavigateUri="{Binding Inventory}" Style="{StaticResource hotlinkSinglePlayer}">
 										inventory
 									</Hyperlink>
 								</TextBlock>
 								<TextBlock Style="{StaticResource tblBase}">
-									<Hyperlink
-										NavigateUri="{Binding Friends}"
-										RequestNavigate="Hyperlink_RequestNavigate"
-										Style="{StaticResource hlkBase}">
+									<Hyperlink NavigateUri="{Binding Friends}" Style="{StaticResource hotlinkSinglePlayer}">
 										friends
 									</Hyperlink>
 								</TextBlock>
 								<TextBlock Style="{StaticResource tblBase}">
-									<Hyperlink
-										NavigateUri="{Binding FaceIt}"
-										RequestNavigate="Hyperlink_RequestNavigate"
-										Style="{StaticResource hlkBase}">
+									<Hyperlink NavigateUri="{Binding FaceIt}" Style="{StaticResource hotlinkSinglePlayer}">
 										faceit
 									</Hyperlink>
 								</TextBlock>
 								<TextBlock Style="{StaticResource tblBase}">
-									<Hyperlink
-										NavigateUri="{Binding CsgoStats}"
-										RequestNavigate="Hyperlink_RequestNavigate"
-										Style="{StaticResource hlkBase}">
+									<Hyperlink NavigateUri="{Binding CsgoStats}" Style="{StaticResource hotlinkSinglePlayer}">
 										csgostats
 									</Hyperlink>
 								</TextBlock>
 								<TextBlock Style="{StaticResource tblBase}">
-									<Hyperlink
-										NavigateUri="{Binding Steamrep}"
-										RequestNavigate="Hyperlink_RequestNavigate"
-										Style="{StaticResource hlkBase}">
+									<Hyperlink NavigateUri="{Binding Steamrep}" Style="{StaticResource hotlinkSinglePlayer}">
 										steamrep
 									</Hyperlink>
 								</TextBlock>
@@ -218,5 +254,5 @@
 				</DataTemplate>
 			</ItemsControl.ItemTemplate>
 		</ItemsControl>
-	</Grid>
+	</DockPanel>
 </Window>

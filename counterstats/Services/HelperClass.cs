@@ -7,7 +7,7 @@ namespace counterstats.Services
 {
 	public class HelperClass
 	{
-		public static string DownloadText(string url)
+		internal static string DownloadText(string url)
 		{
 			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
 			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
@@ -15,12 +15,12 @@ namespace counterstats.Services
 			using StreamReader reader = new(response.GetResponseStream());
 			return reader.ReadToEnd();
 		}
-		public static string GetXmlpage(string address)
+		internal static string GetXmlpage(string address)
 		{
 			return DownloadText(address);
 		}
 
-		public static string ConvertToID64(string steamID32)
+		internal static string ConvertToID64(string steamID32)
 		{
 			long v = 0x0110000100000000;
 
@@ -34,19 +34,26 @@ namespace counterstats.Services
 			//W=Z*2+V+Y
 			return ((z * 2) + v + y).ToString();
 		}
-		public static XmlDocument GetXmlPlayerBans(string id32)
+		internal static XmlDocument GetXmlPlayerBans(string id32)
 		{
 			string id64 = ConvertToID64(id32);
 			XmlDocument xmlPlayerBans = new();
 			xmlPlayerBans.LoadXml(GetXmlpage(@"http://api.steampowered.com/ISteamUser/GetPlayerBans/v0001/?key=" + SettingsProvider.Settings.ApiKey + "&format=xml&steamids=" + id64));
 			return xmlPlayerBans;
 		}
-		public static XmlDocument GetXmlPlayerSummaries(string id32)
+		internal static XmlDocument GetXmlPlayerSummaries(string id32)
 		{
 			string id64 = ConvertToID64(id32);
 			XmlDocument xmlPlayerSummaries = new();
 			xmlPlayerSummaries.LoadXml(GetXmlpage(@"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + SettingsProvider.Settings.ApiKey + "&format=xml&steamids=" + id64));
 			return xmlPlayerSummaries;
+		}
+
+		internal static XmlDocument GetXmlPlayerFriends(string id64)
+		{
+			XmlDocument xmlPlayerFriends = new();
+			xmlPlayerFriends.LoadXml(GetXmlpage(@"http://api.steampowered.com/ISteamUser/GetFriendList/v1/?key=" + SettingsProvider.Settings.ApiKey + "&format=xml&steamid=" + id64 + "&relationship=friend"));
+			return xmlPlayerFriends;
 		}
 	}
 

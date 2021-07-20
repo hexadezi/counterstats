@@ -7,12 +7,15 @@ namespace counterstats
 	{
 		public string CsgoPath { get; set; } = "";
 		public string ApiKey { get; set; } = "";
+		public string MySteamID { get; set; } = "";
+		public bool IgnoreFriends { get; set; }
+		public bool IgnoreOwnId { get; set; }
 	}
 
 
 	public static class SettingsProvider
 	{
-		public static Settings Settings { get; set; } = null;
+		public static Settings Settings { get; set; }
 		public static string Savefile { get; set; } = "config.json";
 
 		static SettingsProvider()
