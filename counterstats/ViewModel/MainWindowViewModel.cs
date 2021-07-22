@@ -1,7 +1,6 @@
 ﻿using counterstats.Model;
 using counterstats.Services;
 using counterstats.ViewModel.Base;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -22,7 +21,7 @@ namespace counterstats.ViewModel
 		public List<string> IDsToIgnore { get; set; } = new();
 		public RelayCommand OpenAll { get; set; }
 		public RelayCommand Open { get; set; }
-		public bool OnTop => SettingsProvider.Settings.OnTop;
+		public static bool OnTop => SettingsProvider.Settings.OnTop;
 		public MainWindowViewModel()
 		{
 			Initialize();
@@ -36,26 +35,26 @@ namespace counterstats.ViewModel
 			tailNET.LineAdded += TailNET_LineAdded;
 			tailNET.Start();
 
-			Task.Run(() =>
-			{
-				if (SettingsProvider.Settings.IgnoreFriends && SettingsProvider.Settings.MySteamID != "")
-				{
-					try
-					{
-						XmlDocument XmlFriends = HelperClass.GetXmlPlayerFriends(SettingsProvider.Settings.MySteamID);
+			_ = Task.Run(() =>
+			  {
+				  if (SettingsProvider.Settings.IgnoreFriends && SettingsProvider.Settings.MySteamID != "")
+				  {
+					  try
+					  {
+						  XmlDocument XmlFriends = HelperClass.GetXmlPlayerFriends(SettingsProvider.Settings.MySteamID);
 
-						foreach (XmlElement item in XmlFriends.DocumentElement.SelectNodes("/friendslist/friends/friend/steamid"))
-						{
-							IDsToIgnore.Add(item.InnerText);
-							Debug.WriteLine("Ignore: " + item.InnerText);
-						}
-					}
-					catch (WebException)
-					{
-						Debug.WriteLine("No friends for: " + SettingsProvider.Settings.MySteamID);
-					}
-				}
-			});
+						  foreach (XmlElement item in XmlFriends.DocumentElement.SelectNodes("/friendslist/friends/friend/steamid"))
+						  {
+							  IDsToIgnore.Add(item.InnerText);
+							  Debug.WriteLine("Ignore: " + item.InnerText);
+						  }
+					  }
+					  catch (WebException)
+					  {
+						  Debug.WriteLine("No friends for: " + SettingsProvider.Settings.MySteamID);
+					  }
+				  }
+			  });
 
 		}
 

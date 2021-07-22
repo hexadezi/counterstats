@@ -1,11 +1,6 @@
 ﻿using counterstats.Services;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Net;
-using System.Text.RegularExpressions;
-using System.Windows.Media.Imaging;
+using System.Globalization;
 using System.Xml;
 
 namespace counterstats.Model
@@ -51,11 +46,7 @@ namespace counterstats.Model
 
 			if (CommunityVisibilityState == "3")
 			{
-				TimeCreated = DateTimeOffset.FromUnixTimeSeconds(
-					Int32.Parse(
-						XmlPlayerSummaries.DocumentElement.SelectSingleNode(
-							"/response/players/player/timecreated").InnerText))
-					.DateTime.ToString("[dd.MM.yy]");
+				TimeCreated = DateTimeOffset.FromUnixTimeSeconds(Int32.Parse(XmlPlayerSummaries.DocumentElement.SelectSingleNode("/response/players/player/timecreated").InnerText, CultureInfo.InvariantCulture)).DateTime.ToString("[dd.MM.yy]", CultureInfo.InvariantCulture);
 			}
 
 
