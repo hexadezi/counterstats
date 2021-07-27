@@ -91,6 +91,7 @@ namespace counterstats.ViewModel
 			if (e.StartsWith("# userid name uniqueid"))
 			{
 				lock (_myCollectionLock) { Players.Clear(); }
+				return;
 			}
 
 			Match match = Regex.Match(e, ".*(STEAM_\\d:\\d:[^\\s]+)");
